@@ -1,0 +1,31 @@
+# ===== Build output =====
+build/
+bin/
+out/
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.exe
+
+# ===== CMake =====
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# ===== IDE files =====
+.vscode/
+.idea/
+*.swp
+
+# ===== OS files =====
+.DS_Store
+Thumbs.db
+
+# ===== Debug / profiling =====
+*.log
+*.prof
+core
