@@ -11,17 +11,26 @@
 #include <cmath>
 using namespace std;
 
+enum GameState
+{
+    MENU,
+    PLAYING
+};
+
 InputState input;
 
 int main()
 {
-    cout << __cplusplus << endl;
     GameContext ctx{800, 450, (float)(800 / 15)};
 
+    GameState currentState = MENU;
+
     InitWindow(ctx.screenWidth, ctx.screenHeight, "Platformer with Camera");
+    SetExitKey(KEY_NULL);
+    InitAudioDevice();
     SetTargetFPS(120);
 
-    Vector2 playerPos = {ctx.tileSize * 10, 200};
+    Vector2 playerPos = {ctx.tileSize * 10, 296};
 
     Background background = Background(ctx);
     Player player = Player(playerPos, ctx);
@@ -32,7 +41,7 @@ int main()
     level.LoadTextures();
     player.LoadTextures();
 
-    UI ui = UI(level.getNumOfAllDiamonds(), player);
+    UI ui = UI(ctx, level.getNumOfAllDiamonds(), player);
     ui.LoadTextures();
 
     Camera2D camera = {0};
@@ -46,8 +55,12 @@ int main()
             ctx.screenWidth = GetScreenWidth();
             ctx.screenHeight = GetScreenHeight();
         }
+
         float deltaTime = GetFrameTime();
 
+        Vector2 mouse = GetMousePosition();
+
+        input.pouse = IsKeyDown(KEY_ESCAPE);
         input.moveRight = IsKeyDown(KEY_D);
         input.moveLeft = IsKeyDown(KEY_A);
         input.jump = IsKeyDown(KEY_SPACE);
@@ -56,14 +69,20 @@ int main()
 
         camera.target = {player.getRenderPosition().x, (float)(ctx.screenHeight / 2)};
 
+        if (currentState == PLAYING)
+        {
+
+            if (input.pouse)
+                currentState = MENU;
+
+            level.Update(deltaTime, input);
+        }
         background.Update(deltaTime);
-        level.Update(deltaTime, input);
 
         BeginDrawing();
         ClearBackground(WHITE);
 
         background.Draw();
-
         ui.Draw();
 
         BeginMode2D(camera);
@@ -71,9 +90,25 @@ int main()
         level.Draw();
 
         EndMode2D();
+
+        if (currentState == MENU)
+        {
+
+            bool mouseOver =
+                CheckCollisionPointRec(mouse, ui.getButtonPlayHitbox());
+
+            if (mouseOver && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+            {
+                currentState = PLAYING;
+            }
+
+            DrawRectangle(0, 0, ctx.screenWidth, ctx.screenHeight, Color{0, 0, 0, 50});
+            ui.DrawPlayButton();
+        }
         EndDrawing();
     }
 
+    CloseAudioDevice();
     CloseWindow();
     Anemy::UnloadTextures();
     return 0;

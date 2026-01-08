@@ -8,17 +8,27 @@ class UI
 private:
     int allDiamonds = 0;
     Player &player;
+    GameContext &ctx;
 
     Texture2D progressBar;
+    Texture2D buttonPlay;
 
     Rectangle progressBarBorderRect;
     Rectangle progressBarProgressRect;
 
+    Rectangle buttonPlayHitbox;
+
     int frameNumProgressBar = 2;
 
 public:
-    UI(int allDiamonds, Player &player) : allDiamonds(allDiamonds), player(player) {};
+    UI(GameContext &ctx, int allDiamonds, Player &player) : ctx(ctx), allDiamonds(allDiamonds), player(player) {};
     ~UI();
     void LoadTextures();
     void Draw();
+    void DrawPlayButton();
+    void DrawBlurredMap();
+    Rectangle getButtonPlayHitbox()
+    {
+        return buttonPlayHitbox;
+    }
 };

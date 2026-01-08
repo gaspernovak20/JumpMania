@@ -7,4 +7,5 @@ struct InputState
     bool jump = false;
     bool attack = false;
     bool shield = false;
+    bool pouse = false;
 };

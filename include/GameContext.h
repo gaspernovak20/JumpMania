@@ -2,7 +2,7 @@
 
 struct GameContext
 {
-    int screenWidth;
-    int screenHeight;
+    float screenWidth;
+    float screenHeight;
     float tileSize;
 };
