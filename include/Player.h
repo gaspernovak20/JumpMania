@@ -46,6 +46,11 @@ private:
 
     PlayerState playerState = STATE_IDLE;
 
+    Sound swordSound;
+    Sound walkSound;
+    Sound diamondSound;
+    Sound hurtSound;
+
     Texture2D spriteIdle;
     Texture2D spriteWalk;
     Texture2D spriteJump;

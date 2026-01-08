@@ -44,6 +44,11 @@ void Player::LoadTextures()
     frameRecDead = {0.f, 0.f, (float)spriteDead.width / frameNumDead, (float)spriteDead.height};
     frameRecShield = {0.f, 0.f, (float)spriteShield.width / frameNumShield, (float)spriteShield.height};
     frameRecHurt = {0.f, 0.f, (float)spriteHurt.width / frameNumHurt, (float)spriteHurt.height};
+
+    swordSound = LoadSound("../assets/sound/swordSound.mp3");
+    walkSound = LoadSound("../assets/sound/walkingSound.mp3");
+    diamondSound = LoadSound("../assets/sound/diamondSound.mp3");
+    hurtSound = LoadSound("../assets/sound/hurtSound.mp3");
 }
 
 void Player::Draw()
@@ -86,15 +91,27 @@ void Player::Update(float dt, const InputState &input)
         velocity.x = SPEED;
         facingRight = true;
         isWalking = true;
+        if (!IsSoundPlaying(walkSound))
+        {
+            PlaySound(walkSound);
+        }
     }
     else if (input.moveLeft)
     {
         velocity.x = -SPEED;
         facingRight = false;
         isWalking = true;
+        if (!IsSoundPlaying(walkSound))
+        {
+            PlaySound(walkSound);
+        }
     }
     else
     {
+        if (IsSoundPlaying(walkSound))
+        {
+            StopSound(walkSound);
+        }
         velocity.x = 0;
     }
 
@@ -108,6 +125,7 @@ void Player::Update(float dt, const InputState &input)
     // Attack
     if (input.attack)
     {
+        PlaySound(swordSound);
         isAttacking = true;
     }
 
@@ -274,11 +292,13 @@ void Player::stopVerticalVelocity()
 
 void Player::diamondCollected()
 {
+    PlaySound(diamondSound);
     numOfCollectedDiamonds++;
 }
 
 void Player::takeDamage(float damage)
 {
+    PlaySound(hurtSound);
     healthPoints -= damage;
     playerState = STATE_HURT;
 }
