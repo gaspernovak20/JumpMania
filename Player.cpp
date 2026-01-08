@@ -25,19 +25,25 @@ void Player::LoadTextures()
     spriteWalk = LoadTexture("../assets/player/Walk.png");
     spriteJump = LoadTexture("../assets/player/Jump.png");
     spriteAttack1 = LoadTexture("../assets/player/Attack_1.png");
+    spriteDead = LoadTexture("../assets/player/Dead.png");
+    spriteHurt = LoadTexture("../assets/player/Hurt.png");
+    spriteShield = LoadTexture("../assets/player/Hurt.png");
 
     frameNumIdle = 6;
     frameNumWalk = 8;
     frameNumJump = 12;
     frameNumAttack1 = 6;
+    frameNumDead = 3;
+    frameNumShield = 2;
+    frameNumHurt = 2;
 
     frameRecIdle = {0.f, 0.f, (float)spriteIdle.width / frameNumIdle, (float)spriteIdle.height};
     frameRecWalk = {0.f, 0.f, (float)spriteWalk.width / frameNumWalk, (float)spriteWalk.height};
     frameRecJump = {0.f, 0.f, (float)spriteJump.width / frameNumJump, (float)spriteJump.height};
     frameRecAttack1 = {0.f, 0.f, (float)spriteAttack1.width / frameNumAttack1, (float)spriteAttack1.height};
-
-    int frameWidth = frameRecWalk.width;
-    int frameWidthJump = frameRecJump.width;
+    frameRecDead = {0.f, 0.f, (float)spriteDead.width / frameNumDead, (float)spriteDead.height};
+    frameRecShield = {0.f, 0.f, (float)spriteShield.width / frameNumShield, (float)spriteShield.height};
+    frameRecHurt = {0.f, 0.f, (float)spriteHurt.width / frameNumHurt, (float)spriteHurt.height};
 }
 
 void Player::Draw()
@@ -45,6 +51,9 @@ void Player::Draw()
 
     switch (playerState)
     {
+    case STATE_DEAD:
+        DrawTextureRec(spriteDead, (facingRight ? frameRecDead : Rectangle{frameRecDead.x, 0, -frameRecDead.width, frameRecDead.height}), position, WHITE);
+        break;
     case STATE_WALK:
         DrawTextureRec(spriteWalk, (facingRight ? frameRecWalk : Rectangle{frameRecWalk.x, 0, -frameRecWalk.width, frameRecWalk.height}), position, WHITE);
         break;
@@ -55,6 +64,12 @@ void Player::Draw()
         DrawTextureRec(spriteAttack1, (facingRight ? frameRecAttack1 : Rectangle{frameRecAttack1.x, 0, -frameRecAttack1.width, frameRecAttack1.height}), position, WHITE);
         DrawRectangleLines(attackHitBox.x, attackHitBox.y, attackHitBox.width, attackHitBox.height, GREEN);
         break;
+    case STATE_SHIELD:
+        DrawTextureRec(spriteShield, (facingRight ? frameRecShield : Rectangle{frameRecShield.x, 0, -frameRecShield.width, frameRecShield.height}), position, WHITE);
+        break;
+    case STATE_HURT:
+        DrawTextureRec(spriteHurt, (facingRight ? frameRecHurt : Rectangle{frameRecHurt.x, 0, -frameRecHurt.width, frameRecHurt.height}), position, WHITE);
+        break;
     default:
         DrawTextureRec(spriteIdle, (facingRight ? frameRecIdle : Rectangle{frameRecIdle.x, 0, -frameRecIdle.width, frameRecIdle.height}), position, WHITE);
     }
@@ -64,7 +79,6 @@ void Player::Draw()
 void Player::Update(float dt, const InputState &input)
 {
     isWalking = false;
-    isAttacking = false;
 
     // Horizontal movement
     if (input.moveRight)
@@ -97,10 +111,23 @@ void Player::Update(float dt, const InputState &input)
         isAttacking = true;
     }
 
+    // Shield
+    if (input.shield)
+    {
+        isDefending = true;
+    }
+
     // Gravity (vedno)
     velocity.y += dt * GRAVITY;
 
-    if (isAttacking)
+    if (healthPoints <= 0.0)
+    {
+        playerState = STATE_DEAD;
+    }
+    else if (playerState == STATE_HURT)
+    {
+    }
+    else if (isAttacking)
     {
         playerState = STATE_ATTACK;
         if (facingRight)
@@ -120,6 +147,11 @@ void Player::Update(float dt, const InputState &input)
                 30};
         }
     }
+    else if (isDefending)
+    {
+        playerState = STATE_SHIELD;
+    }
+
     else if (!isGrounded)
     {
         playerState = STATE_JUMP;
@@ -143,8 +175,7 @@ void Player::Update(float dt, const InputState &input)
         }
         frameRecIdle.x = frameRecIdle.width * idleFrameIndex;
     }
-
-    if (playerState == STATE_WALK && isGrounded)
+    else if (playerState == STATE_WALK && isGrounded)
     {
         walkTimer += dt;
         if (walkTimer >= 0.1f)
@@ -154,7 +185,7 @@ void Player::Update(float dt, const InputState &input)
         }
         frameRecWalk.x = frameRecWalk.width * walkFrameIndex;
     }
-    if (playerState == STATE_JUMP)
+    else if (playerState == STATE_JUMP)
     {
         jumpTimer += dt;
         if (jumpTimer >= 0.2f)
@@ -164,7 +195,7 @@ void Player::Update(float dt, const InputState &input)
         }
         frameRecJump.x = frameRecJump.width * jumpFrameIndex;
     }
-    if (playerState == STATE_ATTACK)
+    else if (playerState == STATE_ATTACK)
     {
         attackTimer += dt;
         if (attackTimer > 0.09f)
@@ -179,6 +210,53 @@ void Player::Update(float dt, const InputState &input)
             }
         }
         frameRecAttack1.x = frameRecAttack1.width * attackFrameIndex;
+    }
+    else if (playerState == STATE_DEAD)
+    {
+        deadTimer += dt;
+        if (deadTimer > 0.1f)
+        {
+            deadTimer = 0.0f;
+            deadFrameIndex++;
+            if (deadFrameIndex >= frameNumDead)
+            {
+                isAttacking = false;
+                deadFrameIndex = 0;
+                isAlive = false;
+            }
+        }
+        frameRecDead.x = frameRecDead.width * deadFrameIndex;
+    }
+    else if (playerState == STATE_SHIELD)
+    {
+        shieldTimer += dt;
+        if (shieldTimer > 0.09f)
+        {
+            shieldTimer = 0.0f;
+            shieldFrameIndex++;
+            if (shieldFrameIndex > frameNumShield)
+            {
+                playerState = STATE_IDLE;
+                isDefending = false;
+                shieldFrameIndex = 0;
+            }
+        }
+        frameRecShield.x = frameRecShield.width * shieldFrameIndex;
+    }
+    else if (playerState == STATE_HURT)
+    {
+        hurtTimer += dt;
+        if (hurtTimer > 0.1f)
+        {
+            hurtTimer = 0.0f;
+            hurtFrameIndex++;
+            if (hurtFrameIndex >= frameNumHurt)
+            {
+                hurtFrameIndex = 0;
+                playerState = STATE_IDLE;
+            }
+        }
+        frameRecHurt.x = frameRecHurt.width * hurtFrameIndex;
     }
 }
 
@@ -202,4 +280,5 @@ void Player::diamondCollected()
 void Player::takeDamage(float damage)
 {
     healthPoints -= damage;
+    playerState = STATE_HURT;
 }

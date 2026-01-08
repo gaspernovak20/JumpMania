@@ -52,6 +52,7 @@ int main()
         input.moveLeft = IsKeyDown(KEY_A);
         input.jump = IsKeyDown(KEY_SPACE);
         input.attack = IsKeyDown(KEY_K);
+        input.shield = IsKeyDown(KEY_J);
 
         camera.target = {player.getRenderPosition().x, (float)(ctx.screenHeight / 2)};
 

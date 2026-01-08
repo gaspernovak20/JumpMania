@@ -26,8 +26,7 @@ typedef enum
     ANEMY_STATE_IDLE,
     ANEMY_STATE_WALK,
     ANEMY_STATE_CHARGE,
-    ANEMY_STATE_DEATH
-
+    ANEMY_STATE_DEATH,
 } AnemyState;
 
 struct EnemyTextures

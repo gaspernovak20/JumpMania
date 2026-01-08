@@ -22,7 +22,9 @@ typedef enum
     STATE_WALK,
     STATE_JUMP,
     STATE_ATTACK,
-    STATE_DEFEND
+    STATE_DEAD,
+    STATE_SHIELD,
+    STATE_HURT
 } PlayerState;
 
 class Anemy;
@@ -37,8 +39,8 @@ private:
     bool isGrounded = false;
     bool isAttacking = false;
     bool isWalking = false;
+    bool isDefending = false;
     bool facingRight = true;
-    bool isAlive = true;
 
     int numOfCollectedDiamonds = 0;
 
@@ -48,27 +50,42 @@ private:
     Texture2D spriteWalk;
     Texture2D spriteJump;
     Texture2D spriteAttack1;
+    Texture2D spriteDead;
+    Texture2D spriteShield;
+    Texture2D spriteHurt;
 
     int frameNumIdle;
     int frameNumWalk;
     int frameNumJump;
     int frameNumAttack1;
+    int frameNumDead;
+    int frameNumShield;
+    int frameNumHurt;
 
     Rectangle frameRecIdle;
     Rectangle frameRecWalk;
     Rectangle frameRecJump;
     Rectangle frameRecAttack1;
+    Rectangle frameRecDead;
+    Rectangle frameRecShield;
+    Rectangle frameRecHurt;
 
     int walkFrameIndex = 0;
     int jumpFrameIndex = 0;
     int attackFrameIndex = 0;
     int idleFrameIndex = 0;
+    int deadFrameIndex = 0;
+    int shieldFrameIndex = 0;
+    int hurtFrameIndex = 0;
 
     float idleTime = 0.0f;
     float actionTime = 0.0f;
     float walkTimer = 0.0f;
     float attackTimer = 0.0f;
     float jumpTimer = 0.0f;
+    float deadTimer = 0.0f;
+    float shieldTimer = 0.0f;
+    float hurtTimer = 0.0f;
 
     Rectangle bodyHitBox = {position.x + BODY_OFFSET_X, position.y + BODY_OFFSET_Y, BODY_WIDTH, BODY_HEIGHT};
     Rectangle attackHitBox;
@@ -76,6 +93,8 @@ private:
 public:
     Player(Vector2 position, GameContext &ctx);
     ~Player();
+
+    bool isAlive = true;
 
     void LoadTextures();
     void Draw();

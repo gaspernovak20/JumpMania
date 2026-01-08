@@ -6,4 +6,5 @@ struct InputState
     bool moveRight = false;
     bool jump = false;
     bool attack = false;
+    bool shield = false;
 };

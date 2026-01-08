@@ -70,7 +70,10 @@ void Level::Draw()
         }
     }
 
-    player.Draw();
+    if (player.isAlive)
+    {
+        player.Draw();
+    }
 
     for (Anemy &anemy : anemies)
     {
@@ -83,7 +86,10 @@ void Level::Draw()
 
 void Level::Update(float dt, InputState input)
 {
-    player.Update(dt, input);
+    if (player.isAlive)
+    {
+        player.Update(dt, input);
+    }
 
     Vector2 playerNextPos = player.getNextPosition(dt);
 
@@ -124,7 +130,7 @@ void Level::Update(float dt, InputState input)
         if (anemy.getAnemyState() == ANEMY_STATE_CHARGE &&
             !anemy.hasHit() &&
             aabbCollision(anemy.getHitbox(), player.getHitbox()) &&
-            player.getPlayerState() != STATE_DEFEND)
+            player.getPlayerState() != STATE_SHIELD)
         {
             player.takeDamage(anemy.getAttackDamage());
             anemy.markHit();

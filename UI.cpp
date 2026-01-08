@@ -19,7 +19,7 @@ void UI::Draw()
     DrawTextureRec(progressBar, progressBarProgressRect, {(float)(40), (float)(13)}, WHITE);
     DrawTextureRec(progressBar, progressBarBorderRect, {(float)(40), (float)(13)}, WHITE);
 
-    progressBarProgressRect.width = progressBar.width * (float)(player.getHealthPoints() / 100.0);
+    progressBarProgressRect.width = progressBar.width * max(0.0, (player.getHealthPoints() / 100.0));
     DrawTextureRec(progressBar, progressBarProgressRect, {(float)(40), (float)(53)}, RED);
     DrawTextureRec(progressBar, progressBarBorderRect, {(float)(40), (float)(53)}, RED);
 }
