@@ -18,6 +18,7 @@ add_executable(game
     Anemy.cpp
     Player.cpp
     Background.cpp
+    GameController.cpp
 )
 
 target_include_directories(game PRIVATE ${RAYLIB_INCLUDE_DIR})

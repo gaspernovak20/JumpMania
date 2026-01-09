@@ -6,8 +6,10 @@ UI::~UI()
 {
     UnloadTexture(progressBar);
 }
-void UI::LoadTextures()
+void UI::LoadTextures(int numOfAllDiamonds)
 {
+    allDiamonds = numOfAllDiamonds;
+
     progressBar = LoadTexture("../assets/ui/ProgressBarR.png");
     buttonPlay = LoadTexture("../assets/ui/buttonPlay.png");
 
@@ -26,9 +28,15 @@ void UI::Draw()
     progressBarProgressRect.width = progressBar.width * max(0.0, (player.getHealthPoints() / 100.0));
     DrawTextureRec(progressBar, progressBarProgressRect, {(float)(40), (float)(53)}, RED);
     DrawTextureRec(progressBar, progressBarBorderRect, {(float)(40), (float)(53)}, RED);
+
+    if (isMenuOpen)
+    {
+        DrawMenu();
+    }
 }
 
-void UI::DrawPlayButton()
+void UI::DrawMenu()
 {
+    DrawRectangle(0, 0, ctx.screenWidth, ctx.screenHeight, Fade(BLACK, 0.5f));
     DrawTexture(buttonPlay, ctx.screenWidth / 2 - buttonPlay.width / 2, ctx.screenHeight / 2 - buttonPlay.height / 2, WHITE);
 }

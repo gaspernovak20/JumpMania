@@ -10,6 +10,10 @@ private:
     Player &player;
     GameContext &ctx;
 
+    bool isMenuOpen = true;
+
+    Vector2 mouse;
+
     Texture2D progressBar;
     Texture2D buttonPlay;
 
@@ -20,15 +24,17 @@ private:
 
     int frameNumProgressBar = 2;
 
+    void DrawMenu();
+
 public:
-    UI(GameContext &ctx, int allDiamonds, Player &player) : ctx(ctx), allDiamonds(allDiamonds), player(player) {};
+    UI(GameContext &ctx, Player &player) : ctx(ctx), player(player) {};
     ~UI();
-    void LoadTextures();
+    void LoadTextures(int numOfAllDiamonds);
     void Draw();
-    void DrawPlayButton();
-    void DrawBlurredMap();
     Rectangle getButtonPlayHitbox()
     {
         return buttonPlayHitbox;
     }
+    void menuOpen() { isMenuOpen = true; };
+    void menuClose() { isMenuOpen = false; };
 };
