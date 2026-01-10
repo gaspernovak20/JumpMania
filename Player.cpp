@@ -5,11 +5,10 @@
 #include "include/Player.h"
 #include "include/InputState.h"
 #include "include/GameContext.h"
+#include "include/AudioManager.h"
 #include "include/Anemy.h"
 
 using namespace std;
-
-Player::Player(Vector2 position, GameContext &ctx) : position(position), ctx(ctx) {};
 
 Player::~Player()
 {
@@ -49,6 +48,11 @@ void Player::LoadTextures()
     walkSound = LoadSound("../assets/sound/walkingSound.mp3");
     diamondSound = LoadSound("../assets/sound/diamondSound.mp3");
     hurtSound = LoadSound("../assets/sound/hurtSound.mp3");
+
+    audioManager.registerSfx(swordSound);
+    audioManager.registerSfx(walkSound);
+    audioManager.registerSfx(diamondSound);
+    audioManager.registerSfx(hurtSound);
 }
 
 void Player::Draw()

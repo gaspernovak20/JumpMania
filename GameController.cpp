@@ -1,5 +1,4 @@
 #include "raylib.h"
-#include "include/Anemy.h"
 #include "include/Player.h"
 #include "include/InputState.h"
 #include "include/Level.h"
@@ -8,8 +7,8 @@
 #include "include/GameContext.h"
 #include "include/GameController.h"
 #include "include/GameState.h"
+#include "include/AudioManager.h"
 #include <filesystem>
-#include <vector>
 #include <cmath>
 using namespace std;
 
@@ -57,12 +56,18 @@ void GameController::Update(float dt)
     else if (currentState == GameState::MENU)
     {
 
-        bool mouseOver = CheckCollisionPointRec(mouse, ui.getButtonPlayHitbox());
-
-        if (mouseOver && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        if (CheckCollisionPointRec(mouse, ui.getButtonPlayHitbox()) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
             currentState = GameState::PLAYING;
             ui.menuClose();
+        }
+        else if (CheckCollisionPointRec(mouse, ui.getButtonSoundHitbox()) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            audioManager.setSfxVolume(0);
+        }
+        else if (CheckCollisionPointRec(mouse, ui.getButtonMusicHitbox()) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            audioManager.setSfxVolume(0);
         }
     }
 

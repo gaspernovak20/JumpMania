@@ -11,12 +11,18 @@ void UI::LoadTextures(int numOfAllDiamonds)
     allDiamonds = numOfAllDiamonds;
 
     progressBar = LoadTexture("../assets/ui/ProgressBarR.png");
-    buttonPlay = LoadTexture("../assets/ui/buttonPlay.png");
+    playBtn = LoadTexture("../assets/ui/PlayBTN.png");
+    soundBtn = LoadTexture("../assets/ui/BTN/BTN_Basic/Sound_BTN.png");
+    soundBtnZero = LoadTexture("../assets/ui/BTN/BTN_Active/Sound_BTN.png");
+    musicBtn = LoadTexture("../assets/ui/BTN/BTN_Basic/Music_BTN.png");
+    musicBtnZero = LoadTexture("../assets/ui/BTN/BTN_Active/Music_BTN.png");
 
     progressBarBorderRect = {0.f, 0.f, (float)progressBar.width, (float)progressBar.height / frameNumProgressBar};
     progressBarProgressRect = {0.f, (float)progressBar.height / frameNumProgressBar, (float)progressBar.width, (float)progressBar.height / frameNumProgressBar};
 
-    buttonPlayHitbox = {ctx.screenWidth / 2 - buttonPlay.width / 2, ctx.screenHeight / 2 - buttonPlay.height / 2, (float)buttonPlay.width, (float)buttonPlay.height};
+    btnPlayHitbox = {ctx.screenWidth / 2 - playBtn.width / 2, ctx.screenHeight / 2 - playBtn.height / 2, (float)playBtn.width, (float)playBtn.height};
+    btnSoundHitbox = {ctx.screenWidth - 70, 20, (float)soundBtn.width, (float)soundBtn.height};
+    btnMusicHitbox = {ctx.screenWidth - 70, 70, (float)musicBtn.width, (float)musicBtn.height};
 }
 
 void UI::Draw()
@@ -38,5 +44,17 @@ void UI::Draw()
 void UI::DrawMenu()
 {
     DrawRectangle(0, 0, ctx.screenWidth, ctx.screenHeight, Fade(BLACK, 0.5f));
-    DrawTexture(buttonPlay, ctx.screenWidth / 2 - buttonPlay.width / 2, ctx.screenHeight / 2 - buttonPlay.height / 2, WHITE);
+    DrawTexture(playBtn, ctx.screenWidth / 2 - playBtn.width / 2, ctx.screenHeight / 2 - playBtn.height / 2, WHITE);
+
+    if (audioManager.getSoundVolume() <= 0.0)
+    {
+        DrawTexture(soundBtnZero, ctx.screenWidth - 70, 20, WHITE);
+    }
+    else
+        DrawTexture(soundBtn, ctx.screenWidth - 70, 20, WHITE);
+
+    if (audioManager.getSoundVolume() <= 0.0)
+        DrawTexture(musicBtnZero, ctx.screenWidth - 70, 70, WHITE);
+    else
+        DrawTexture(musicBtn, ctx.screenWidth - 70, 70, WHITE);
 }

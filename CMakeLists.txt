@@ -19,6 +19,7 @@ add_executable(game
     Player.cpp
     Background.cpp
     GameController.cpp
+    AudioManager.cpp
 )
 
 target_include_directories(game PRIVATE ${RAYLIB_INCLUDE_DIR})

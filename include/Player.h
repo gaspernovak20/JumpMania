@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include "InputState.h"
 #include "../include/GameContext.h"
+#include "../include/AudioManager.h"
 
 #include <string>
 #include <vector>
@@ -33,6 +34,8 @@ class Player
 {
 private:
     GameContext &ctx;
+    AudioManager &audioManager;
+
     Vector2 position;
     int healthPoints = 100;
     Vector2 velocity = {0.0f, 0.0f};
@@ -96,7 +99,8 @@ private:
     Rectangle attackHitBox;
 
 public:
-    Player(Vector2 position, GameContext &ctx);
+    Player(Vector2 position, GameContext &ctx, AudioManager &audioManager) : position(position), ctx(ctx), audioManager(audioManager) {};
+
     ~Player();
 
     bool isAlive = true;

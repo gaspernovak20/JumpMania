@@ -7,6 +7,7 @@
 #include "../include/UI.h"
 #include "../include/GameContext.h"
 #include "../include/GameState.h"
+#include "../include/AudioManager.h"
 #include <filesystem>
 #include <vector>
 #include <cmath>
@@ -20,6 +21,7 @@ private:
     Level level;
     Player player;
     UI ui;
+    AudioManager audioManager;
     Vector2 playerPos = {ctx.tileSize * 10, 296};
 
     Camera2D camera;
@@ -29,9 +31,10 @@ private:
 
 public:
     GameController() : background(ctx),
-                       player({ctx.tileSize * 10, 296}, ctx),
-                       level("..//Level.txt", ctx, player),
-                       ui(ctx, player) {};
+                       audioManager(),
+                       player({ctx.tileSize * 10, 296}, ctx, audioManager),
+                       level("..//Level.txt", ctx, audioManager, player),
+                       ui(ctx, audioManager, player) {};
     // ~GameController();
     void Initialize();
     void Update(float dt);

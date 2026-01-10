@@ -5,6 +5,7 @@
 #include "../include/GameContext.h"
 #include "../include/Player.h"
 #include "../include/Anemy.h"
+#include "../include/AudioManager.h"
 
 using namespace std;
 
@@ -13,6 +14,7 @@ class Level
 private:
     GameContext &ctx;
     Player &player;
+    AudioManager &audioManager;
 
     vector<Anemy> anemies;
 
@@ -35,8 +37,8 @@ private:
     float dimondTime = 0.0f;
 
 public:
-    Level(string levelName, GameContext &ctx, Player &player)
-        : levelName(levelName), ctx(ctx), player(player) {};
+    Level(string levelName, GameContext &ctx, AudioManager &audioManager, Player &player)
+        : levelName(levelName), ctx(ctx), audioManager(audioManager), player(player) {};
     ~Level();
     void LoadTextures();
     void Draw();
