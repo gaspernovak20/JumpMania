@@ -20,11 +20,13 @@ void Level::LoadTextures()
     numberOfDiamonds = 0;
     loadLevel(levelName);
 
-    grassTexture = LoadTexture("../assets/GrasBlock.png");
-    dirtBlock = LoadTexture("../assets/DirtBlock.png");
-    diamond = LoadTexture("../assets/Diamond.png");
+    grassTexture = LoadTexture("../assets/level/GrasBlock.png");
+    dirtBlock = LoadTexture("../assets/level/DirtBlock.png");
+    diamond = LoadTexture("../assets/level/Diamond.png");
+    checkPointIdle = LoadTexture("../assets/level/CheckPoint/CheckpointIdle.png");
 
     dimondRec = {0.f, 0.f, (float)diamond.width / frameNumDiamond, (float)diamond.height};
+    checkPointIdleRec = {0.f, 0.f, (float)checkPointIdle.width / frameNumCheckPointIdle, (float)checkPointIdle.height};
 
     for (int i = 0; i < levelHeight; i++)
     {
@@ -66,6 +68,10 @@ void Level::Draw()
             else if (level[i][j] == '*')
             {
                 DrawTextureRec(diamond, dimondRec, {(float)(j * ctx.tileSize), (float)(i * ctx.tileSize)}, WHITE);
+            }
+            else if (level[i][j] == '$')
+            {
+                DrawTextureRec(checkPointIdle, checkPointIdleRec, {(float)(j * ctx.tileSize), (float)(i * ctx.tileSize) + checkPointIdle.height}, WHITE);
             }
         }
     }
@@ -152,9 +158,17 @@ void Level::Update(float dt, InputState input)
     if (dimondTime >= 0.1f)
     {
         dimondTime = 0;
-        dimondRecIndex = (dimondRecIndex + 1) % 8;
+        dimondRecIndex = (dimondRecIndex + 1) % frameNumDiamond;
     }
     dimondRec.x = dimondRec.width * dimondRecIndex;
+
+    checkPointIdleTime += dt;
+    if (checkPointIdleTime >= 0.1f)
+    {
+        checkPointIdleTime = 0;
+        checkPointIdleRecIndex = (checkPointIdleRecIndex + 1) % frameNumCheckPointIdle;
+    }
+    checkPointIdleRec.x = checkPointIdleRec.width * checkPointIdleRecIndex;
 };
 
 void Level::loadLevel(string levelName)

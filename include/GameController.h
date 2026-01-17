@@ -8,6 +8,8 @@
 #include "../include/GameContext.h"
 #include "../include/GameState.h"
 #include "../include/AudioManager.h"
+#include "../include/SaveManager.h"
+#include "../include/Settings.h"
 #include <filesystem>
 #include <vector>
 #include <cmath>
@@ -22,7 +24,8 @@ private:
     Player player;
     UI ui;
     AudioManager audioManager;
-    Vector2 playerPos = {ctx.tileSize * 10, 296};
+    Vector2 playerPos = {ctx.tileSize * 30, 296};
+    Settings &settings;
 
     Camera2D camera;
     GameState currentState;
@@ -30,11 +33,12 @@ private:
     Vector2 mouse;
 
 public:
-    GameController() : background(ctx),
-                       audioManager(),
-                       player({ctx.tileSize * 10, 296}, ctx, audioManager),
-                       level("..//Level.txt", ctx, audioManager, player),
-                       ui(ctx, audioManager, player) {};
+    GameController(Settings &settings) : background(ctx),
+                                         settings(settings),
+                                         audioManager(settings),
+                                         player({ctx.tileSize * 10, 296}, ctx, audioManager),
+                                         level("..//Level.txt", ctx, audioManager, player),
+                                         ui(ctx, audioManager, player) {};
     // ~GameController();
     void Initialize();
     void Update(float dt);

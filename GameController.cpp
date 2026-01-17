@@ -22,6 +22,7 @@ void GameController::Initialize()
     player.LoadTextures();
     ui.LoadTextures(level.getNumOfAllDiamonds());
     audioManager.Initial();
+    audioManager.ApplySettings(settings);
     currentState = GameState::MENU;
 
     camera = {0};
@@ -31,7 +32,6 @@ void GameController::Initialize()
 
 void GameController::Update(float dt)
 {
-
     mouse = GetMousePosition();
 
     input.pouse = IsKeyDown(KEY_ESCAPE);

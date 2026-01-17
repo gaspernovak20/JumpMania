@@ -28,13 +28,19 @@ private:
     Texture2D grassTexture;
     Texture2D dirtBlock;
     Texture2D diamond;
+    Texture2D checkPointIdle;
 
     int frameNumDiamond = 8;
+    int frameNumCheckPointIdle = 10;
 
     Rectangle dimondRec;
+    Rectangle checkPointIdleRec;
 
     int dimondRecIndex = 0;
+    int checkPointIdleRecIndex = 0;
+
     float dimondTime = 0.0f;
+    float checkPointIdleTime = 0.0f;
 
 public:
     Level(string levelName, GameContext &ctx, AudioManager &audioManager, Player &player)

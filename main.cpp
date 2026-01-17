@@ -12,7 +12,12 @@ int main()
     InitAudioDevice();
     SetTargetFPS(120);
 
-    GameController game;
+    Settings setting;
+    SaveManager saveManager;
+
+    saveManager.LoadData(setting);
+
+    GameController game(setting);
     game.Initialize();
     while (!WindowShouldClose())
     {
@@ -31,6 +36,7 @@ int main()
         EndDrawing();
     }
 
+    saveManager.SaveData(setting);
     CloseAudioDevice();
     CloseWindow();
     return 0;
