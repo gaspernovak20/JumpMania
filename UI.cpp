@@ -47,14 +47,12 @@ void UI::DrawMenu()
     DrawTexture(playBtn, ctx.screenWidth / 2 - playBtn.width / 2, ctx.screenHeight / 2 - playBtn.height / 2, WHITE);
 
     if (audioManager.getSoundVolume() <= 0.0)
-    {
         DrawTexture(soundBtnZero, ctx.screenWidth - 70, 20, WHITE);
-    }
     else
         DrawTexture(soundBtn, ctx.screenWidth - 70, 20, WHITE);
 
-    if (audioManager.getSoundVolume() <= 0.0)
-        DrawTexture(musicBtnZero, ctx.screenWidth - 70, 70, WHITE);
-    else
+    if (audioManager.isMusicPlaying())
         DrawTexture(musicBtn, ctx.screenWidth - 70, 70, WHITE);
+    else
+        DrawTexture(musicBtnZero, ctx.screenWidth - 70, 70, WHITE);
 }

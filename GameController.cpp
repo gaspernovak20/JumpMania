@@ -21,6 +21,7 @@ void GameController::Initialize()
     level.LoadTextures();
     player.LoadTextures();
     ui.LoadTextures(level.getNumOfAllDiamonds());
+    audioManager.Initial();
     currentState = GameState::MENU;
 
     camera = {0};
@@ -30,6 +31,7 @@ void GameController::Initialize()
 
 void GameController::Update(float dt)
 {
+
     mouse = GetMousePosition();
 
     input.pouse = IsKeyDown(KEY_ESCAPE);
@@ -63,15 +65,16 @@ void GameController::Update(float dt)
         }
         else if (CheckCollisionPointRec(mouse, ui.getButtonSoundHitbox()) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
-            audioManager.setSfxVolume(0);
+            audioManager.changeSoundState();
         }
         else if (CheckCollisionPointRec(mouse, ui.getButtonMusicHitbox()) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
-            audioManager.setSfxVolume(0);
+            audioManager.changeMusicState();
         }
     }
 
     background.Update(dt);
+    audioManager.Update();
 }
 
 void GameController::Draw()

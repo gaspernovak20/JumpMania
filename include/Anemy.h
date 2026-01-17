@@ -11,7 +11,7 @@ static constexpr float ANEMY_BODY_OFFSET_X = 48.0f;
 static constexpr float ANEMY_BODY_OFFSET_Y = 50.0f;
 
 constexpr float CHARGE_DISTANCE = 35.f;
-constexpr float AGRO_DISTANCE = 300.f;
+constexpr float AGRO_DISTANCE = 250.f;
 constexpr float RETURN_EPSILON = 2.0f;
 
 constexpr float IDLE_FRAME_TIME = 0.1f;
