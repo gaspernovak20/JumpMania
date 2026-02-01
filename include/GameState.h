@@ -2,6 +2,8 @@
 
 enum class GameState
 {
+    TITLE,
     MENU,
-    PLAYING
+    PLAYING,
+    FINISH,
 };

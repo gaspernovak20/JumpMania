@@ -19,11 +19,12 @@ void GameController::Initialize()
     Anemy::LoadTextures();
     background.LoadTextures();
     level.LoadTextures();
-    player.LoadTextures();
     ui.LoadTextures(level.getNumOfAllDiamonds());
     audioManager.Initial();
     audioManager.ApplySettings(settings);
-    currentState = GameState::MENU;
+    currentState = GameState::TITLE;
+
+    gameTime = 0.0;
 
     camera = {0};
     camera.offset = {ctx.screenWidth / 2.0f, ctx.screenHeight / 2.0f};
@@ -43,16 +44,40 @@ void GameController::Update(float dt)
 
     camera.target = {player.getRenderPosition().x, (float)(ctx.screenHeight / 2)};
 
+    if (player.getHealthPoints() <= 0)
+    {
+        gameTime = 0;
+        player.setHealthPoints(100);
+        player.setNumOfCollectedDiamonds(0);
+        level.LoadTextures();
+        player.setPosition({ctx.tileSize * 5, 296});
+        currentState = GameState::MENU;
+    }
+
+    if (currentState == GameState::TITLE)
+    {
+        if (CheckCollisionPointRec(mouse, ui.getFighterHitbox()) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            player.LoadTextures("Fighter");
+            currentState = GameState::MENU;
+        }
+        else if (CheckCollisionPointRec(mouse, ui.getSamuraiHitbox()) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            player.LoadTextures("Samurai");
+            currentState = GameState::MENU;
+        }
+    }
+
     if (currentState == GameState::PLAYING)
     {
+        gameTime += dt;
         if (input.pouse)
         {
             currentState = GameState::MENU;
-            ui.menuOpen();
         }
         else
         {
-            level.Update(dt, input);
+            level.Update(dt, input, currentState);
         }
     }
     else if (currentState == GameState::MENU)
@@ -61,7 +86,6 @@ void GameController::Update(float dt)
         if (CheckCollisionPointRec(mouse, ui.getButtonPlayHitbox()) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
             currentState = GameState::PLAYING;
-            ui.menuClose();
         }
         else if (CheckCollisionPointRec(mouse, ui.getButtonSoundHitbox()) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
@@ -70,6 +94,19 @@ void GameController::Update(float dt)
         else if (CheckCollisionPointRec(mouse, ui.getButtonMusicHitbox()) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
             audioManager.changeMusicState();
+        }
+    }
+    else if (currentState == GameState::FINISH)
+    {
+
+        if (CheckCollisionPointRec(mouse, ui.getButtonRestartHitbox()) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            gameTime = 0;
+            player.setHealthPoints(100);
+            player.setNumOfCollectedDiamonds(0);
+            level.LoadTextures();
+            player.setPosition({ctx.tileSize * 5, 296});
+            currentState = GameState::MENU;
         }
     }
 
@@ -88,7 +125,7 @@ void GameController::Draw()
 
     EndMode2D();
 
-    ui.Draw();
+    ui.Draw(currentState, gameTime);
 }
 
 void GameController::OnWindowResized(int screenWidth, int screenHeight)

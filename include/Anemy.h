@@ -19,7 +19,7 @@ constexpr float WALK_FRAME_TIME = 0.1f;
 constexpr float CHARGE_FRAME_TIME = 0.05f;
 constexpr float DEATH_FRAME_TIME = 0.2f;
 
-constexpr float ATTACK_DAMAGE = 25.0f;
+constexpr float ATTACK_DAMAGE = 50.0f;
 
 typedef enum
 {

@@ -6,8 +6,14 @@
 #include "../include/Player.h"
 #include "../include/Anemy.h"
 #include "../include/AudioManager.h"
+#include "../include/GameState.h"
 
 using namespace std;
+
+static constexpr float CHECKPOINT_WIDTH = 30.0f;
+static constexpr float CHECKPOINT_HEIGHT = 50.0f;
+static constexpr float CHECKPOINT_OFFSET_X = 3306.0f;
+static constexpr float CHECKPOINT_OFFSET_Y = 328.0f;
 
 class Level
 {
@@ -36,6 +42,8 @@ private:
     Rectangle dimondRec;
     Rectangle checkPointIdleRec;
 
+    Rectangle checkPointHitbox;
+
     int dimondRecIndex = 0;
     int checkPointIdleRecIndex = 0;
 
@@ -48,12 +56,13 @@ public:
     ~Level();
     void LoadTextures();
     void Draw();
-    void Update(float dt, InputState input);
+    void Update(float dt, InputState input, GameState &gameState);
     void loadLevel(string levelName);
     bool isSolid(int x, int y);
     bool checkCollision(Rectangle &rec);
     bool isDiamond(int x, int y);
-    bool checkIfDiamondCollected(const Rectangle &rec);
+    bool isCheckpoint(int x, int y);
+    bool checkIfCollected(bool (Level::*isSomething)(int, int), const Rectangle &rec);
     bool aabbCollision(const Rectangle &a, const Rectangle &b);
 
     int getNumOfAllDiamonds()

@@ -105,7 +105,7 @@ public:
 
     bool isAlive = true;
 
-    void LoadTextures();
+    void LoadTextures(string player);
     void Draw();
     void Update(float dt, const InputState &input);
 
@@ -129,9 +129,19 @@ public:
         return numOfCollectedDiamonds;
     }
 
+    void setNumOfCollectedDiamonds(int numOfCD)
+    {
+        numOfCollectedDiamonds = numOfCD;
+    }
+
     int getHealthPoints()
     {
         return healthPoints;
+    }
+
+    void setHealthPoints(int hp)
+    {
+        healthPoints = hp;
     }
 
     Vector2 getRenderPosition() const
@@ -170,5 +180,10 @@ public:
     void setGrounded(bool grounded)
     {
         isGrounded = grounded;
+    }
+
+    void setPosition(Vector2 newPosition)
+    {
+        position = newPosition;
     }
 };

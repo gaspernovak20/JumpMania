@@ -24,19 +24,20 @@ private:
     Player player;
     UI ui;
     AudioManager audioManager;
-    Vector2 playerPos = {ctx.tileSize * 30, 296};
+    Vector2 playerPos = {ctx.tileSize * 5, 296};
     Settings &settings;
 
     Camera2D camera;
     GameState currentState;
 
+    float gameTime;
     Vector2 mouse;
 
 public:
     GameController(Settings &settings) : background(ctx),
                                          settings(settings),
                                          audioManager(settings),
-                                         player({ctx.tileSize * 10, 296}, ctx, audioManager),
+                                         player({ctx.tileSize * 5, 296}, ctx, audioManager),
                                          level("..//Level.txt", ctx, audioManager, player),
                                          ui(ctx, audioManager, player) {};
     // ~GameController();

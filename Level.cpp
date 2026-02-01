@@ -6,6 +6,7 @@
 #include "include/Level.h"
 #include "include/GameContext.h"
 #include "include/InputState.h"
+#include "include/GameState.h"
 
 using namespace std;
 
@@ -71,7 +72,8 @@ void Level::Draw()
             }
             else if (level[i][j] == '$')
             {
-                DrawTextureRec(checkPointIdle, checkPointIdleRec, {(float)(j * ctx.tileSize), (float)(i * ctx.tileSize) + checkPointIdle.height}, WHITE);
+                DrawRectangleLines(CHECKPOINT_OFFSET_X, CHECKPOINT_OFFSET_Y, CHECKPOINT_WIDTH, CHECKPOINT_HEIGHT, BLUE);
+                DrawTextureRec(checkPointIdle, checkPointIdleRec, {(float)(j * ctx.tileSize), (float)(i * ctx.tileSize) - 10}, WHITE);
             }
         }
     }
@@ -90,7 +92,7 @@ void Level::Draw()
     }
 };
 
-void Level::Update(float dt, InputState input)
+void Level::Update(float dt, InputState input, GameState &gameState)
 {
     if (player.isAlive)
     {
@@ -121,9 +123,15 @@ void Level::Update(float dt, InputState input)
     }
 
     // Diamond collected
-    if (checkIfDiamondCollected(player.getHitbox()))
+    if (checkIfCollected(&Level::isDiamond, player.getHitbox()))
     {
         player.diamondCollected();
+    }
+
+    // Checkpoint collected
+    if (checkIfCollected(&Level::isCheckpoint, player.getHitbox()))
+    {
+        gameState = GameState::FINISH;
     }
 
     for (Anemy &anemy : anemies)
@@ -163,7 +171,7 @@ void Level::Update(float dt, InputState input)
     dimondRec.x = dimondRec.width * dimondRecIndex;
 
     checkPointIdleTime += dt;
-    if (checkPointIdleTime >= 0.1f)
+    if (checkPointIdleTime >= 0.05f)
     {
         checkPointIdleTime = 0;
         checkPointIdleRecIndex = (checkPointIdleRecIndex + 1) % frameNumCheckPointIdle;
@@ -215,6 +223,11 @@ bool Level::isDiamond(int x, int y)
     return false;
 }
 
+bool Level::isCheckpoint(int x, int y)
+{
+    return level[y][x] == '$';
+}
+
 bool Level::checkCollision(Rectangle &rec)
 {
     const int left = rec.x / ctx.tileSize;
@@ -225,15 +238,17 @@ bool Level::checkCollision(Rectangle &rec)
     return isSolid(left, top) || isSolid(right, top) || isSolid(left, bottom) || isSolid(right, bottom);
 }
 
-bool Level::checkIfDiamondCollected(const Rectangle &rec)
+bool Level::checkIfCollected(bool (Level::*isSomething)(int, int), const Rectangle &rec)
 {
-
     const int left = rec.x / ctx.tileSize;
     const int top = rec.y / ctx.tileSize;
     const int right = (rec.x + rec.width - 1) / ctx.tileSize;
     const int bottom = (rec.y + rec.height - 1) / ctx.tileSize;
 
-    return isDiamond(left, top) || isDiamond(right, top) || isDiamond(left, bottom) || isDiamond(right, bottom);
+    return (this->*isSomething)(left, top) ||
+           (this->*isSomething)(right, top) ||
+           (this->*isSomething)(left, bottom) ||
+           (this->*isSomething)(right, bottom);
 }
 
 bool Level::aabbCollision(const Rectangle &a, const Rectangle &b)

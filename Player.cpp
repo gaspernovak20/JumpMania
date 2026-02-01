@@ -1,14 +1,13 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <format>
 
 #include "include/Player.h"
 #include "include/InputState.h"
 #include "include/GameContext.h"
 #include "include/AudioManager.h"
 #include "include/Anemy.h"
-
-using namespace std;
 
 Player::~Player()
 {
@@ -18,23 +17,37 @@ Player::~Player()
     UnloadTexture(spriteAttack1);
 }
 
-void Player::LoadTextures()
+void Player::LoadTextures(string player)
 {
-    spriteIdle = LoadTexture("../assets/player/Idle.png");
-    spriteWalk = LoadTexture("../assets/player/Walk.png");
-    spriteJump = LoadTexture("../assets/player/Jump.png");
-    spriteAttack1 = LoadTexture("../assets/player/Attack_1.png");
-    spriteDead = LoadTexture("../assets/player/Dead.png");
-    spriteHurt = LoadTexture("../assets/player/Hurt.png");
-    spriteShield = LoadTexture("../assets/player/Hurt.png");
+    std::string path = "../assets/player/" + player;
+    spriteIdle = LoadTexture((path + "/Idle.png").c_str());
+    spriteWalk = LoadTexture((path + "/Walk.png").c_str());
+    spriteJump = LoadTexture((path + "/Jump.png").c_str());
+    spriteAttack1 = LoadTexture((path + "/Attack_1.png").c_str());
+    spriteDead = LoadTexture((path + "/Dead.png").c_str());
+    spriteHurt = LoadTexture((path + "/Hurt.png").c_str());
+    spriteShield = LoadTexture((path + "/Shield.png").c_str());
 
-    frameNumIdle = 6;
-    frameNumWalk = 8;
-    frameNumJump = 12;
-    frameNumAttack1 = 6;
-    frameNumDead = 3;
-    frameNumShield = 2;
-    frameNumHurt = 2;
+    if (player == "Samurai")
+    {
+        frameNumIdle = 6;
+        frameNumWalk = 8;
+        frameNumJump = 12;
+        frameNumAttack1 = 6;
+        frameNumDead = 3;
+        frameNumShield = 2;
+        frameNumHurt = 2;
+    }
+    else
+    {
+        frameNumIdle = 6;
+        frameNumWalk = 8;
+        frameNumJump = 10;
+        frameNumAttack1 = 4;
+        frameNumDead = 3;
+        frameNumShield = 2;
+        frameNumHurt = 3;
+    }
 
     frameRecIdle = {0.f, 0.f, (float)spriteIdle.width / frameNumIdle, (float)spriteIdle.height};
     frameRecWalk = {0.f, 0.f, (float)spriteWalk.width / frameNumWalk, (float)spriteWalk.height};

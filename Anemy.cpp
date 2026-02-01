@@ -66,6 +66,7 @@ void Anemy::Draw()
         DrawRectangleLines(bodyHitBox.x, bodyHitBox.y, bodyHitBox.width, bodyHitBox.height, RED);
         break;
     case ANEMY_STATE_CHARGE:
+
         DrawTexturePro(anemyTexture.spriteCharge, facingRight ? anemyTexture.frameRecCharge : Rectangle{anemyTexture.frameRecCharge.x, anemyTexture.frameRecCharge.y, -anemyTexture.frameRecCharge.width, anemyTexture.frameRecCharge.height}, {position.x, position.y, anemyTexture.frameRecCharge.width * 2, anemyTexture.frameRecCharge.height * 2}, {0.f, 0.f}, 0.f, WHITE);
         DrawRectangleLines(bodyHitBox.x, bodyHitBox.y, bodyHitBox.width, bodyHitBox.height, RED);
         break;
@@ -113,7 +114,6 @@ void Anemy::Update(float dt, const Vector2 playerPos, const Rectangle playerHitb
     }
     else if (anemyState == ANEMY_STATE_CHARGE)
     {
-
         chargeTimer += dt;
         if (chargeTimer >= 0.05)
         {
